@@ -2,10 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Hand : MonoBehaviour
+public class HandSphere : MonoBehaviour
 {
     GameObject[] HandPoint;
-    // Start is called before the first frame update
+    [SerializeField, Range(0, 10)]
+    float Ratio;
+    [SerializeField, Range(0, 10000)]
+    float XYRatio;
+
     void Start()
     {
         HandPoint = new GameObject[this.transform.childCount];
@@ -16,16 +20,13 @@ public class Hand : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     public void MovePoint(HandsTest[] MovePoints)
     {
         int index = 0;
-        Debug.Log("a");
         foreach(HandsTest MovePoint in MovePoints)
         {
-            Debug.Log(HandPoint[index].name);
             HandsTestPoint Point = MovePoint.Point;
-            HandPoint[index].transform.position = new Vector3(Point.x, -Point.y, Point.z);
+            HandPoint[index].transform.position = new Vector3(Point.x / XYRatio, -Point.y / XYRatio, Point.z * Ratio);
             index++;
         }
     }

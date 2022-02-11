@@ -14,9 +14,9 @@ public class PythonProgram
 {
     Process MainProcess;
     Process PythonProcess;
-    TcpClient client;
-    IPEndPoint remoteEP;
-    TcpListener listener;
+    TcpClient Client;
+    IPEndPoint RemoteEP;
+    TcpListener Listener;
     string ProgramName;
     string UsingIPAddress;
     int UsingPort;
@@ -31,20 +31,18 @@ public class PythonProgram
         this.UsingIPAddress = UsingIPAddress;
         this.UsingPort = UsingPort;
         this.ProgramPass = ProgramPass;
-
-        remoteEP = new IPEndPoint(IPAddress.Any, UsingPort);
+        RemoteEP = new IPEndPoint(IPAddress.Any, UsingPort);
     }
 
     public void StartPythonProgram()
     {
-        UnityEngine.Debug.Log("aa");
         if (MainProcess == null)
         {
             MainProcess = new Process();
             MainProcess.StartInfo.FileName = ProgramPass;
             MainProcess.StartInfo.UseShellExecute = true;
             //MainProcess.StartInfo.Arguments = ;
-    
+
             MainProcess.EnableRaisingEvents = true;
             MainProcess.Exited += MainProcess_Exited;
 
@@ -57,10 +55,10 @@ public class PythonProgram
 
     public void EndProcess()
     {
-        if (MainProcess.HasExited == false)
+        if (MainProcess != null && MainProcess.HasExited == false)
         {
             IsConnection = false;
-            client.Close();
+            Client.Close();
             MainProcess.CloseMainWindow();
             MainProcess.Dispose();
             UnityEngine.Debug.Log(ProgramName + ": End");
@@ -70,7 +68,7 @@ public class PythonProgram
     void MainProcess_Exited(object sender, System.EventArgs e)
     {
         IsConnection = false;
-        client.Close();
+        Client.Close();
         MainProcess.CloseMainWindow();
         MainProcess.Dispose();
         UnityEngine.Debug.Log(ProgramName + ": Exited");
@@ -80,12 +78,11 @@ public class PythonProgram
     {
         try
         {
-            listener = new TcpListener(remoteEP);
-            listener.Start();
-            client = listener.AcceptTcpClient();
+            Listener = new TcpListener(RemoteEP);
+            Listener.Start();
+            Client = Listener.AcceptTcpClient();
             IsConnection = true;
-
-            NetworkStream Stream = client.GetStream();
+            NetworkStream Stream = Client.GetStream();
 
             GetPID(Stream);
             while(IsConnection)
@@ -110,23 +107,11 @@ public class PythonProgram
         String responseData = String.Empty;
         Int32 bytes = Stream.Read(data, 0, data.Length);
         responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-
         UnityEngine.Debug.Log("PID: " +  responseData);
+
         PythonProcess = Process.GetProcessById(Int32.Parse(responseData));
         Byte[] buffer = System.Text.Encoding.ASCII.GetBytes("responce: " + responseData);
         Stream.Write(buffer, 0, buffer.Length);
-    }
-}
-
-[System.Serializable]
-public class PythonTest
-{
-    public int Count;
-    public int Num;
-    public void Show()
-    {
-        UnityEngine.Debug.Log("Count " + Count);
-        UnityEngine.Debug.Log("Num " + Num);
     }
 }
 
@@ -149,7 +134,7 @@ public class HandsTestPoint
     public float z;
     public void Show()
     {
-        // UnityEngine.Debug.Log("x:" + x + "\ny:" + y + "\nz:" + z);
+        UnityEngine.Debug.Log("x:" + x + "\ny:" + y + "\nz:" + z);
     }
 }
 
