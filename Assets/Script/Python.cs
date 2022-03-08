@@ -86,7 +86,7 @@ public class PythonProgram
             int i = 0;
             while(IsConnection)
             {
-                if (i++ > 1000)
+                if (i++ > 1000) // 接続が切れた時の無限ループ対応
                     return;
                 Byte[] data = new Byte[200000];
                 String RawResponseData = String.Empty;
