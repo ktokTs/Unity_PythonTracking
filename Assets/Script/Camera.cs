@@ -7,6 +7,8 @@ public class Camera : MonoBehaviour
     Vector3 StartPos;
     [SerializeField]
     GameObject Target;
+    [SerializeField]
+    bool Trace;
 
     void Start()
     {
@@ -15,6 +17,8 @@ public class Camera : MonoBehaviour
 
     void Update()
     {
+        if (!Trace)
+            return;
         this.transform.position = Target.transform.position - StartPos;
     }
 }

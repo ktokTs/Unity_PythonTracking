@@ -9,18 +9,23 @@ public class PipeController : MonoBehaviour
     GameObject HandSphereObject;
     [SerializeField]
     GameObject HandCylinderObject;
+    [SerializeField]
+    GameObject TraceParticleObject;
 
     HandSphere HandSphereScript;
     HandCylinder HandCylinderScript;
+    TraceParticle TraceParticleScript;
     PythonProgram PythonProgram = new PythonProgram("Python Program", "127.0.0.1", 50007, SecretInfo.ProgramPath);
     SynchronizationContext MainThread;
     string JsonData;
-
+    bool IsOffSet;
+    Hands[] HandsPoints;
     void Start()
     {
         MainThread = SynchronizationContext.Current;
         HandSphereScript = HandSphereObject.GetComponent<HandSphere>();
         HandCylinderScript = HandCylinderObject.GetComponent<HandCylinder>();
+        TraceParticleScript = TraceParticleObject.GetComponent<TraceParticle>();
         PythonProgram.ResponceEvents += InvokeMethod;
     }
 
@@ -43,6 +48,14 @@ public class PipeController : MonoBehaviour
         {
             PythonProgram.EndProcess();
         }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            TraceParticleScript.SetOffSet(HandsPoints);
+        }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            TraceParticleScript.MovePoint(new Hands[]{new Hands{}});
+        }
     }
 
     void ResponceEvents()
@@ -50,11 +63,18 @@ public class PipeController : MonoBehaviour
         string Data = JsonData;
         if (Data == null || Data == "0")
             return;
-        HandsTest[] HandsPoints = JsonHelper.FromJson<HandsTest>(Data);
-        foreach(HandsTest HandsPoint in HandsPoints)
-            HandsPoint.Show();
-        HandSphereScript.MovePoint(HandsPoints);
-        HandCylinderScript.MovePoint(HandsPoints);
+        HandsPoints = JsonHelper.FromJson<Hands>(Data);
+        // foreach(Hands HandsPoint in HandsPoints)
+            // HandsPoint.Show();
+        // HandSphereScript.MovePoint(HandsPoints);
+        // HandCylinderScript.MovePoint(HandsPoints);
+        if (!IsOffSet)
+        {
+            TraceParticleScript.SetOffSet(HandsPoints);
+            IsOffSet = true;
+        }
+        else
+            TraceParticleScript.MovePoint(HandsPoints);
     }
 }
 

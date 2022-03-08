@@ -29,12 +29,12 @@ public class HandCylinder : MonoBehaviour
         }
     }
 
-    public void MovePoint(HandsTest[] MovePoints)
+    public void MovePoint(Hands[] MovePoints)
     {
         int index = 0;
         foreach(int[] line in landmark_line_ids)
         {
-            HandsTestPoint Point = MovePoints[line[0]].Point;
+            HandsPoint Point = MovePoints[line[0]].Point;
             Vector3 Point1 = new Vector3(Point.x / XYRatio, -Point.y / XYRatio, Point.z * Ratio);
             Point = MovePoints[line[1]].Point;
             Vector3 Point2 = new Vector3(Point.x / XYRatio, -Point.y / XYRatio, Point.z * Ratio);

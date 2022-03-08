@@ -20,12 +20,12 @@ public class HandSphere : MonoBehaviour
         }
     }
 
-    public void MovePoint(HandsTest[] MovePoints)
+    public void MovePoint(Hands[] MovePoints)
     {
         int index = 0;
-        foreach(HandsTest MovePoint in MovePoints)
+        foreach(Hands MovePoint in MovePoints)
         {
-            HandsTestPoint Point = MovePoint.Point;
+            HandsPoint Point = MovePoint.Point;
             HandPoint[index].transform.position = new Vector3(Point.x / XYRatio, -Point.y / XYRatio, Point.z * Ratio);
             index++;
         }
