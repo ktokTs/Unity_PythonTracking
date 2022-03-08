@@ -10,6 +10,7 @@ public class TraceParticle : MonoBehaviour
     [SerializeField, Range(0, 10000)]
     float XYRatio;
     Vector2 OffSet;
+    Vector2[] LinearTrans = new Vector2[4];
 
     Transform MyTransform;
 
@@ -82,5 +83,25 @@ public class TraceParticle : MonoBehaviour
         "\nCenter.x = " + Center.x + 
         "\nRightEye.x = " + RightEye.Point.x
         );
+    }
+
+    public void SetLinearTrans(Hands[] EyePoint, int Num)
+    {
+        Hands RightEye = EyePoint[473];
+        Hands LeftEye = EyePoint[468];
+
+        if (0 <= Num && Num <= 3)
+        {
+            LinearTrans[Num].x = RightEye.Point.x;
+            LinearTrans[Num].y = RightEye.Point.y;
+        }
+        else
+        {
+            int index = 0;
+            foreach (Vector2 OffSet in LinearTrans)
+            {
+                Debug.Log(index + ", " + "x: " + OffSet.x + ", y: " + OffSet.y);
+            }
+        }
     }
 }
